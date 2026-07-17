@@ -2,14 +2,15 @@
 
 ## Milestone 1 - Factory Foundations
 
-### Phase 1: Lifecycle Kernel and Safe Routing
-**Goal:** Establish deterministic workflow state control, safe routing primitives, and policy boundaries for autonomous execution.
+### Phase 1: Pi Integration Baseline and Safe Routing
+**Goal:** Establish Pi/gsd-pi as the execution authority, then layer deterministic routing and policy boundaries without duplicating existing lifecycle semantics.
 **Mode:** mvp
-**Requirements:** BOOT-01, BOOT-02, CTRL-01, CTRL-02, SAFE-01
+**Requirements:** BOOT-01, BOOT-02, CTRL-01, CTRL-02, CTRL-05, SAFE-01
 **Success Criteria:**
-1. Workflow state transitions are explicit, idempotent, and persisted.
+1. Integration boundaries between Flow and Pi/gsd-pi are defined, with ownership split documented (what Flow orchestrates vs what Pi/gsd-pi already guarantees).
 2. Intake jobs can be normalized and routed to a workflow class deterministically.
 3. Policy boundaries prevent unauthorized tool/use-path combinations during execution.
+4. Phase progression uses Pi/gsd-pi workflow surfaces and write/gate mechanisms rather than a duplicate lifecycle engine.
 
 ### Phase 2: Bootstrap Workflow (Large Markdown -> Project Artifacts)
 **Goal:** Deliver the first end-to-end factory workflow that turns a large product-definition markdown file into usable GSD project artifacts.

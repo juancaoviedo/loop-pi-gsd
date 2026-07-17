@@ -20,6 +20,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CTRL-02**: System enforces an explicit lifecycle state machine with idempotent transitions.
 - [ ] **CTRL-03**: System supports pause/resume and recovery from checkpoints without losing phase context.
 - [ ] **CTRL-04**: System records immutable run metadata for each workflow execution.
+- [ ] **CTRL-05**: System applies GSD workflow rules through Pi/gsd-pi workflow surfaces instead of reimplementing lifecycle semantics from scratch.
 
 ### Phase Execution
 
@@ -99,6 +100,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BOOT-04 | Phase 2 | Pending |
 | CTRL-01 | Phase 1 | Pending |
 | CTRL-02 | Phase 1 | Pending |
+| CTRL-05 | Phase 1 | Pending |
 | CTRL-03 | Phase 5 | Pending |
 | CTRL-04 | Phase 5 | Pending |
 | PHASE-01 | Phase 3 | Pending |
@@ -122,8 +124,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SAFE-03 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 27 total
-- Mapped to phases: 27
+- v1 requirements: 28 total
+- Mapped to phases: 28
 - Unmapped: 0
 
 ---
