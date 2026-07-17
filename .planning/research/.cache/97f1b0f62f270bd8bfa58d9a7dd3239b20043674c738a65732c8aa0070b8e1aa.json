@@ -1,0 +1,1 @@
+{"content":"Execution isolation for untrusted and LLM-generated code commonly combines Kubernetes scheduling with sandboxed runtimes such as gVisor to reduce host escape risk while preserving container-level ergonomics.","source":"web","provider":"exa","confidence":"LOW","fetched_at":"2026-07-17T14:53:17.804Z","ttl":86400000,"kind":"web"}
