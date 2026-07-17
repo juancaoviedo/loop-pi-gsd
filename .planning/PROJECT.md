@@ -51,6 +51,8 @@ The first two workflows establish the platform core:
 2. Phase execution workflow:
    Read the roadmap, select phases, and autonomously run the GSD lifecycle needed to move a phase from definition to verified execution.
 
+To make this truly autonomous, interactive lifecycle steps such as specification and discussion cannot depend on direct human replies by default. The factory needs an interactive delegation mechanism where a responder agent can answer structured workflow questions on behalf of the project, under policy controls and with explicit escalation to humans when confidence is low or risk is high.
+
 These workflows are deliberately foundational. If they work reliably, they become the substrate for broader factory capabilities such as ticket intake, workflow routing, multi-cell execution, hotfix orchestration, and automated phase expansion.
 
 ## Constraints
@@ -69,6 +71,8 @@ These workflows are deliberately foundational. If they work reliably, they becom
 | Start with two foundational workflows | The platform needs a narrow proof surface before expanding into all factory workflows | — Pending |
 | Use Pi as execution surface and GSD as process memory/workflow layer | Reuse strong existing primitives instead of rebuilding agent harness and SDLC control from scratch | — Pending |
 | Favor workflow-first architecture | Routing, verification, and persistence must live in deterministic code rather than giant prompts | — Pending |
+| Extend gsd-pi instead of rebuilding orchestration primitives | Existing workflow tools, interactive question surfaces, session management, and provider plumbing reduce implementation risk and time | — Pending |
+| Add interactive delegation for spec/discuss workflows | Autonomous execution requires replacing user-question bottlenecks with policy-gated responder agents and escalation paths | — Pending |
 
 ## Evolution
 

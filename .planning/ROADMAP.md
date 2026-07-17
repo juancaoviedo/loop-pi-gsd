@@ -23,29 +23,32 @@
 ### Phase 3: Phase Reader and Execution Orchestrator
 **Goal:** Build the second foundational workflow that reads roadmap phases and prepares autonomous phase execution with isolation.
 **Mode:** mvp
-**Requirements:** PHASE-01, SAFE-02
+**Requirements:** PHASE-01, SAFE-02, INTD-01, INTD-02
 **Success Criteria:**
 1. System can load roadmap phases and select target phases for execution.
 2. Selected phases run in isolated execution contexts.
 3. Orchestrator can hand off phase context into the lifecycle chain reliably.
+4. Interactive workflow question rounds can be intercepted and routed to responder agents with deterministic context packs.
 
 ### Phase 4: Autonomous Phase Lifecycle Engine
 **Goal:** Execute phases through the GSD lifecycle chain autonomously with deterministic retries and verification hooks.
 **Mode:** mvp
-**Requirements:** PHASE-02, PHASE-03, PHASE-04, VER-01, VER-02, VER-03
+**Requirements:** PHASE-02, PHASE-03, PHASE-04, INTD-03, VER-01, VER-02, VER-03
 **Success Criteria:**
 1. For a selected phase, lifecycle execution progresses through required GSD steps without manual sequencing.
 2. Failed checks trigger bounded repair/revision loops with preserved context.
 3. Each run produces machine-readable verification outputs and blocks completion on failed gates.
+4. Delegated interactive answers are schema-validated before blocked steps are resumed.
 
 ### Phase 5: Evidence, Memory, and Controlled Escalation
 **Goal:** Add reliability governance: evidence bundles, memory reconciliation, and risk-based escalation.
 **Mode:** mvp
-**Requirements:** CTRL-03, CTRL-04, VER-04, MEM-01, MEM-02, MEM-03, SAFE-03
+**Requirements:** CTRL-03, CTRL-04, INTD-04, INTD-05, VER-04, MEM-01, MEM-02, MEM-03, SAFE-03
 **Success Criteria:**
 1. Every phase run stores an evidence bundle and authoritative verdict history.
 2. Project memory preserves provenance and reconciles markdown projections with runtime state.
 3. High-risk or low-confidence outcomes escalate to explicit human review gates.
+4. Delegated interactive rounds record agent identity, rationale summary, and escalation decisions in auditable artifacts.
 
 ## Milestone 2 - Factory Expansion (Planned)
 

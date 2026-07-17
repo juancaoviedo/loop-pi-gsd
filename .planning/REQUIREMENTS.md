@@ -28,6 +28,14 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PHASE-03**: System can update phase status and artifacts after each lifecycle step.
 - [ ] **PHASE-04**: System can loop revision and repair when checks fail, within defined retry policies.
 
+### Interactive Delegation
+
+- [ ] **INTD-01**: System can intercept interactive question rounds from spec/discuss workflows and route them to a responder agent.
+- [ ] **INTD-02**: Responder agent receives deterministic context packs (project artifacts, roadmap, source intent) before answering.
+- [ ] **INTD-03**: System validates responder answers against required schema before resuming blocked workflow steps.
+- [ ] **INTD-04**: System applies policy-gated escalation to human when confidence is low, answers conflict, or risk threshold is exceeded.
+- [ ] **INTD-05**: Every delegated question/answer round is persisted as auditable evidence with provenance.
+
 ### Verification & Evidence
 
 - [ ] **VER-01**: Each phase execution produces deterministic verification outputs (lint/test/type/build or equivalent checks).
@@ -97,6 +105,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PHASE-02 | Phase 4 | Pending |
 | PHASE-03 | Phase 4 | Pending |
 | PHASE-04 | Phase 4 | Pending |
+| INTD-01 | Phase 3 | Pending |
+| INTD-02 | Phase 3 | Pending |
+| INTD-03 | Phase 4 | Pending |
+| INTD-04 | Phase 5 | Pending |
+| INTD-05 | Phase 5 | Pending |
 | VER-01 | Phase 4 | Pending |
 | VER-02 | Phase 4 | Pending |
 | VER-03 | Phase 4 | Pending |
@@ -109,8 +122,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SAFE-03 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 22 total
-- Mapped to phases: 22
+- v1 requirements: 27 total
+- Mapped to phases: 27
 - Unmapped: 0
 
 ---
