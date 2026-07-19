@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "runId": "orchestrator-87ae6e5323cd",
+  "createdAt": "2026-07-18T20:12:54.149Z",
+  "manifestPath": "flow/runs/orchestrator-87ae6e5323cd/orchestrator-manifest.json",
+  "phaseEvidence": [
+    {
+      "phaseNumber": 5,
+      "status": "complete",
+      "artifact": "flow/runs/orchestrator-87ae6e5323cd/phases/phase-05/lifecycle-result.json"
+    }
+  ],
+  "delegationRecords": [
+    {
+      "questionId": "phase-05-default",
+      "workflow": "discuss-phase",
+      "agentId": "responder-agent",
+      "rationale": "default delegation trace",
+      "confidence": 0.75,
+      "riskScore": 0.2,
+      "conflict": false,
+      "escalationDisposition": "pending-policy",
+      "createdAt": "2026-07-18T20:12:54.147Z"
+    }
+  ],
+  "checkpoints": [
+    {
+      "phaseNumber": 5,
+      "checkpoint": "verified",
+      "artifact": "flow/runs/orchestrator-87ae6e5323cd/phases/phase-05/lifecycle-result.json"
+    }
+  ]
+}

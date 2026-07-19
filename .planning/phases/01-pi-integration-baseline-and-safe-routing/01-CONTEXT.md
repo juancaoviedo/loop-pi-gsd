@@ -8,6 +8,8 @@
 
 Phase 1 delivers the thin deterministic kernel for Flow's two slash-command workflows. It defines the ownership split between Flow and Pi/gsd-pi, the canonical workflow ids that Flow accepts, and the fail-closed policy boundary that keeps Phase 1 from duplicating lifecycle semantics.
 
+The placement is explicit: Flow kernel code lives in the repository root under `flow/`, while `external/gsd-pi` keeps only a thin slash-command bridge.
+
 </domain>
 
 <spec_lock>
@@ -39,20 +41,21 @@ Downstream agents MUST read `01-SPEC.md` before planning or implementing. Requir
 ### Ownership boundary and phase scope
 - **D-01:** Flow owns intake normalization, canonical routing, and policy gating for the two slash-command workflows.
 - **D-02:** Pi/gsd-pi remains the execution authority, workflow surface owner, and lifecycle machinery owner.
+- **D-02a:** Flow kernel placement is root-level `flow/`; gsd-pi contains only bridge code for these commands.
 - **D-03:** Phase 1 stays thin and does not add a third workflow type or a generic workflow catalog.
 
 ### Canonical slash-command routing
 - **D-04:** `flow-create-additional-phases` and `flow-execute-all-phases` are the only accepted Flow workflow ids for this phase.
 - **D-05:** Routing should be exact-match and deterministic; malformed, unknown, or ambiguous input must fail before dispatch.
-- **D-06:** The command normalization step belongs in the slash-command dispatch path before the workflow handler is reached.
+- **D-06:** Command normalization belongs in `flow/kernel/commands.mjs`; the gsd-pi slash-command path only forwards to the root Flow entrypoint.
 
 ### Policy gates and authoritative workflow surfaces
 - **D-07:** Unauthorized tool/use-path combinations must fail closed before execution begins.
-- **D-08:** The phase should keep progression on existing Pi/gsd-pi workflow hooks and write/gate seams rather than introducing a new lifecycle engine.
-- **D-09:** The routing and policy contract should be verified with targeted tests at the existing slash-command, workflow-handler, register-hooks, token-gating, and write-gate seams.
+- **D-08:** The phase should keep progression on existing Pi/gsd-pi workflow hooks and seams rather than introducing a new lifecycle engine.
+- **D-09:** Root Flow kernel tests are authoritative for canonical-id normalization and policy blocking, with bridge coverage in gsd-pi slash-command tests.
 
 ### Claude's Discretion
-- Exact helper placement inside the touched gsd-pi modules is left to implementation, so long as the control flow remains deterministic and fail-closed.
+- Exact helper placement inside the root `flow/` folder is left to implementation, so long as the control flow remains deterministic and fail-closed.
 
 </decisions>
 
@@ -69,11 +72,14 @@ Downstream agents MUST read `01-SPEC.md` before planning or implementing. Requir
 
 ### Pi / gsd-pi integration seams
 - `external/gsd-pi/packages/gsd-agent-modes/src/modes/interactive/slash-command-handlers.ts` — current exact-match slash-command dispatch pattern in interactive mode.
-- `external/gsd-pi/src/resources/extensions/gsd/commands/handlers/workflow.ts` — existing workflow command surface and plugin-mode dispatch.
-- `external/gsd-pi/src/resources/extensions/gsd/bootstrap/register-hooks.ts` — tool-surface and policy-gate registration seam.
-- `external/gsd-pi/src/resources/extensions/gsd/tests/commands-workflow-custom.test.ts` — routing coverage for workflow command dispatch.
-- `external/gsd-pi/src/resources/extensions/gsd/tests/token-tool-gating.test.ts` — tool-surface reduction and gating coverage.
-- `external/gsd-pi/src/resources/extensions/gsd/tests/write-gate-seam.test.ts` — write-gate and phase-surface contract coverage.
+- `external/gsd-pi/packages/gsd-agent-modes/src/modes/interactive/slash-command-handlers.test.ts` — slash-command bridge coverage.
+
+### Root Flow kernel seams
+- `flow/cli.mjs` — root-level Flow command entrypoint.
+- `flow/kernel/commands.mjs` — canonical workflow registry and exact-match normalization.
+- `flow/kernel/policy.mjs` — fail-closed policy helper.
+- `flow/tests/kernel.test.mjs` — deterministic routing and policy-blocking coverage.
+- `flow/docs/phase-1-boundary.md` — ownership and placement contract.
 
 ### Supporting Pi docs and contracts
 - `external/gsd-pi/docs/dev/extending-pi/25-slash-command-subcommand-patterns.md` — slash-command subcommand conventions.
@@ -87,21 +93,19 @@ Downstream agents MUST read `01-SPEC.md` before planning or implementing. Requir
 
 ### Reusable Assets
 - `dispatchSlashCommand` in `external/gsd-pi/packages/gsd-agent-modes/src/modes/interactive/slash-command-handlers.ts` — shows the current exact-match slash-command dispatch style.
-- `dispatchPluginByMode` in `external/gsd-pi/src/resources/extensions/gsd/commands/handlers/workflow.ts` — shows the existing workflow-mode handoff once a command has been canonicalized.
-- `registerHooks` and the write-gate helpers in `external/gsd-pi/src/resources/extensions/gsd/bootstrap/register-hooks.ts` — central place for fail-closed tool and path policy.
-- `buildMinimalGsdToolSet`, `buildMinimalAutoGsdToolSet`, and `requestHasGsdCustomType` in `external/gsd-pi/src/resources/extensions/gsd/bootstrap/register-hooks.ts` — useful patterns for request-scoped tool-surface reduction.
+- Root `flow/` kernel modules are now the reusable assets for command normalization and policy enforcement.
 
 ### Established Patterns
 - Exact string matching is already used for slash-command dispatch in the interactive TUI path.
-- Workflow dispatch already separates canonical command resolution from the underlying workflow execution mode.
-- Policy and tool-surface reduction already live in bootstrap/register-hooks rather than in ad hoc call sites.
+- Flow command normalization is centralized in root kernel code, not duplicated across host adapters.
+- Policy checks fail closed in Flow helpers before orchestration handoff.
 - Tests live next to the seam they protect and assert blocked cases, not just happy paths.
 
 ### Integration Points
-- Flow intake normalization should plug in before the existing slash-command dispatch path canonicalizes to a workflow id.
-- Canonical Flow workflow ids should hand off to the existing gsd-pi workflow handler rather than bypassing it.
-- Policy enforcement should remain in the register-hooks/write-gate seam so unsafe tool or path combinations fail before execution starts.
-- Routing and policy behavior should be covered by the existing workflow and gate test suites rather than by a separate Flow-owned lifecycle engine.
+- Flow intake normalization should be implemented in root `flow/` and invoked through a thin gsd-pi slash-command bridge.
+- Canonical Flow workflow ids should hand off through existing gsd-pi orchestration surfaces, not a duplicate lifecycle engine.
+- Policy enforcement for Flow-specific commands should fail closed in root Flow helpers before orchestration handoff.
+- Routing and policy behavior should be covered by root Flow tests plus the gsd-pi bridge test suite.
 
 </code_context>
 
@@ -110,7 +114,7 @@ Downstream agents MUST read `01-SPEC.md` before planning or implementing. Requir
 
 - The two canonical Flow workflows are the only Phase 1 command surface: `/flow-create-additional-phases` and `/flow-execute-all-phases`.
 - The phase should normalize command text deterministically before any workflow dispatch happens.
-- Phase 1 should use the existing Pi/gsd-pi workflow handler and register-hooks/write-gate seams, not a parallel Flow lifecycle controller.
+- Phase 1 should keep Flow-specific logic in `flow/` and keep only a thin adapter in gsd-pi.
 - Route rejection must happen on malformed, unknown, or ambiguous input so the user never falls through to a partially matched workflow.
 - The helper-skill split belongs in later workflow design, but Phase 1 itself should stay focused on deterministic routing and policy.
 

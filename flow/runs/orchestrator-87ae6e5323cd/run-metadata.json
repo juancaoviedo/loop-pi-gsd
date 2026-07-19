@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "immutable": true,
+  "createdAt": "2026-07-18T20:12:54.148Z",
+  "runId": "orchestrator-87ae6e5323cd",
+  "selectedPhases": [
+    {
+      "phaseNumber": 5,
+      "phaseId": "phase-05"
+    }
+  ],
+  "manifestPath": "flow/runs/orchestrator-87ae6e5323cd/orchestrator-manifest.json",
+  "policyVersion": 1
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "runId": "orchestrator-cc605ba29dbb",
+  "createdAt": "2026-07-19T13:02:10.324Z",
+  "manifestPath": "flow/runs/orchestrator-cc605ba29dbb/orchestrator-manifest.json",
+  "phaseEvidence": [
+    {
+      "phaseNumber": 5,
+      "status": "complete",
+      "artifact": "flow/runs/orchestrator-cc605ba29dbb/phases/phase-05/lifecycle-result.json"
+    }
+  ],
+  "delegationRecords": [
+    {
+      "phaseNumber": 5,
+      "questionId": "phase-05-default",
+      "workflow": "discuss-phase",
+      "agentId": "responder-agent",
+      "question": "Clarify execution intent for phase-05",
+      "answer": "Use deterministic execution constraints from PROJECT/REQUIREMENTS/ROADMAP/STATE and phase artifacts.",
+      "rationale": "default delegation trace",
+      "confidence": 0.75,
+      "riskScore": 0.2,
+      "conflict": false,
+      "escalationDisposition": "pending-policy",
+      "createdAt": "2026-07-19T13:02:10.324Z"
+    }
+  ],
+  "checkpoints": [
+    {
+      "phaseNumber": 5,
+      "checkpoint": "verified",
+      "artifact": "flow/runs/orchestrator-cc605ba29dbb/phases/phase-05/lifecycle-result.json"
+    }
+  ]
+}

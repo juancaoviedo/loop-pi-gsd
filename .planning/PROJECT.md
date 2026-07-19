@@ -6,6 +6,8 @@ Flow is a general-purpose autonomous coding platform for building the system tha
 
 The initial product focus is not the full factory at once, but the first two production workflows that prove the core thesis: the factory can read large product-definition inputs, convert them into structured GSD project artifacts, and then execute roadmap phases autonomously through the GSD lifecycle.
 
+Those first workflows are exposed as slash-command entry points, so the user can invoke them directly from the editor the same way GSD commands are invoked today.
+
 ## Core Value
 
 Turn ambiguous software intent into reliable, evidence-backed engineering execution through reusable AI developer workflows.
@@ -25,8 +27,8 @@ Turn ambiguous software intent into reliable, evidence-backed engineering execut
 
 ### Active
 
-- [ ] Ingest a large architecture or product-definition document and initialize a GSD project from it.
-- [ ] Autonomously execute roadmap phases through the full GSD lifecycle with evidence and verification.
+- [ ] Expose a deterministic slash-command workflow that ingests a large architecture or product-definition document and initializes or extends a GSD roadmap.
+- [ ] Expose a deterministic slash-command workflow that executes roadmap phases through the full GSD lifecycle with evidence and verification.
 - [ ] Establish a workflow-first factory architecture that can expand into additional job types such as feature, bugfix, chore, and hotfix pipelines.
 
 ### Out of Scope
@@ -71,8 +73,9 @@ These workflows are deliberately foundational. If they work reliably, they becom
 | Start with two foundational workflows | The platform needs a narrow proof surface before expanding into all factory workflows | — Pending |
 | Use Pi as execution surface and GSD as process memory/workflow layer | Reuse strong existing primitives instead of rebuilding agent harness and SDLC control from scratch | — Pending |
 | Favor workflow-first architecture | Routing, verification, and persistence must live in deterministic code rather than giant prompts | — Pending |
-| Extend gsd-pi instead of rebuilding orchestration primitives | Existing workflow tools, interactive question surfaces, session management, and provider plumbing reduce implementation risk and time | — Pending |
+| Keep Flow kernel outside gsd-pi and use a thin bridge | Flow is a higher-level product layer; root-level placement reduces coupling while still reusing gsd-pi runtime surfaces | — Pending |
 | Add interactive delegation for spec/discuss workflows | Autonomous execution requires replacing user-question bottlenecks with policy-gated responder agents and escalation paths | — Pending |
+| Keep Phase 1 thin and deterministic | The v1 kernel should define command surfaces, routing, and safety gates, not duplicate the lifecycle engine that later workflows already exercise | — Pending |
 
 ## Evolution
 

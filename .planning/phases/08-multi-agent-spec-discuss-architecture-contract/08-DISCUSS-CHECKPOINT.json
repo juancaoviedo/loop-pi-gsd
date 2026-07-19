@@ -1,0 +1,21 @@
+{
+  "phase": 8,
+  "phase_slug": "multi-agent-spec-discuss-architecture-contract",
+  "mode": "default",
+  "areas_total": 4,
+  "areas_completed": [
+    "Message schema contract shape",
+    "Stop/escalate policy algorithm"
+  ],
+  "decisions": {
+    "schema_shape": "Per-event schemas with shared base envelope",
+    "schema_version": "Semantic major schema version in payload",
+    "schema_text_normalization": "UTF-8 string + trim + NFC normalization",
+    "policy_precedence": "Escalate-and-block always overrides proceed (SPEC lock preserved)",
+    "policy_threshold": "Proceed only when confidence >= threshold and no blockers",
+    "policy_retry": "Bounded retries then escalate-and-block",
+    "policy_reason_output": "Deterministic reason-code set (SPEC lock preserved)"
+  },
+  "deferred_ideas": [],
+  "updated_at": "2026-07-19T00:00:00Z"
+}

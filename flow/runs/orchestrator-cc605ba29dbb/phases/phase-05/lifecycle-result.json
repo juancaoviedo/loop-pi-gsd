@@ -1,0 +1,84 @@
+{
+  "phaseNumber": 5,
+  "phaseId": "phase-05",
+  "status": "complete",
+  "terminalReason": null,
+  "lifecycle": {
+    "schemaVersion": 1,
+    "runId": "orchestrator-cc605ba29dbb",
+    "phaseNumber": 5,
+    "phaseId": "phase-05",
+    "phaseName": "Evidence, Memory, and Controlled Escalation",
+    "status": "complete",
+    "steps": [
+      {
+        "step": "discuss",
+        "status": "started",
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "discuss",
+        "status": "completed",
+        "attempts": 1,
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "plan",
+        "status": "started",
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "plan",
+        "status": "completed",
+        "attempts": 1,
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "execute",
+        "status": "started",
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "execute",
+        "status": "completed",
+        "attempts": 1,
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "verify",
+        "status": "started",
+        "timestamp": "2026-07-19T13:02:10.315Z"
+      },
+      {
+        "step": "verify",
+        "status": "completed",
+        "attempts": 1,
+        "verdict": "pass",
+        "timestamp": "2026-07-19T13:02:10.323Z"
+      }
+    ],
+    "startedAt": "2026-07-19T13:02:10.314Z",
+    "finishedAt": "2026-07-19T13:02:10.323Z",
+    "terminalReason": null,
+    "verification": {
+      "schemaVersion": 1,
+      "checks": [
+        {
+          "name": "lint",
+          "status": "pass",
+          "details": "lint ok for phase 5"
+        },
+        {
+          "name": "tests",
+          "status": "pass",
+          "details": "tests ok for phase 5"
+        }
+      ],
+      "verdict": "pass",
+      "hasChecks": true
+    },
+    "evidenceRefs": [
+      "evidence://phase-05/verify"
+    ]
+  }
+}

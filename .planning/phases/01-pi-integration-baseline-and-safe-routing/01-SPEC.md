@@ -13,13 +13,13 @@ requirements_locked: 6
 
 ## Goal
 
-Phase 1 establishes a thin deterministic kernel for Flow's slash-command workflows so that `flow-create-additional-phases` and `flow-execute-all-phases` route through existing Pi/gsd-pi surfaces with fail-closed policy boundaries and no duplicate lifecycle engine.
+Phase 1 establishes a thin deterministic kernel for Flow's slash-command workflows so that `flow-create-additional-phases` and `flow-execute-all-phases` are normalized and validated in a root-level Flow layer (`flow/`), then routed through existing Pi/gsd-pi surfaces with fail-closed policy boundaries and no duplicate lifecycle engine.
 
 ## Background
 
 The Flow roadmap and requirements are already in place, and the phase capability map now splits phases 1-5 across the two Flow slash-command workflows. The current repository has no Flow-specific SPEC for this phase yet, but the surrounding gsd-pi codebase already provides slash-command dispatch, workflow handlers, and register-hooks/policy seams that Phase 1 must compose rather than replace.
 
-The missing piece is not another workflow engine. Phase 1 needs to lock the control-plane contract: what Flow owns, what Pi/gsd-pi owns, which two canonical Flow workflow ids are accepted, and which tool/use-path combinations must be blocked before execution begins.
+The missing piece is not another workflow engine. Phase 1 needs to lock the control-plane contract: what Flow owns in root `flow/`, what Pi/gsd-pi owns as host/bridge surfaces, which two canonical Flow workflow ids are accepted, and which tool/use-path combinations must be blocked before execution begins.
 
 ## Requirements
 
@@ -71,7 +71,7 @@ The missing piece is not another workflow engine. Phase 1 needs to lock the cont
 
 ## Constraints
 
-- Phase 1 must compose existing Pi/gsd-pi workflow surfaces rather than replace them.
+- Phase 1 must implement Flow command normalization/policy in root `flow/` while composing existing Pi/gsd-pi workflow surfaces through a thin bridge.
 - Canonical routing must be deterministic and exact-match for the two accepted command ids.
 - Policy enforcement must fail closed on any unapproved tool or use-path combination.
 - The phase must stay thin and not expand into the later bootstrap or execution workflows.
