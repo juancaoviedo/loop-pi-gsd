@@ -94,6 +94,10 @@ The rule of thumb is simple: if the step must always happen in the same order, i
 **Goal:** Define a deterministic architecture contract for independent multi-agent debate limited to `/gsd-spec-phase` and `/gsd-discuss-phase`.
 **Mode:** mvp
 **Requirements:** INTD-06, CONS-01, SAFE-04
+**Plans:** 2 plans
+Plans:
+- [ ] 08-01-PLAN.md — Establish deterministic contract baseline, prototype seam, and replay determinism for happy-path + role boundaries.
+- [ ] 08-02-PLAN.md — Harden full failure-mode matrix, bounded timeout/retry behavior, and sanitized governance persistence.
 **Success Criteria:**
 1. Agent roles, boundaries, and ownership are explicit: Agent A orchestrates and writes final artifacts; Agent B critiques and proposes revisions.
 2. Message schemas are versioned and validated for proposal, critique, revision, vote, consensus, timeout, and error events.
