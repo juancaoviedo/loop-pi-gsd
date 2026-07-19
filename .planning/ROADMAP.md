@@ -127,6 +127,12 @@ Plans:
 **Goal:** Implement a minimal production slice with Agent B as a fully separate process using an independent model provider, with two-round consensus for spec/discuss only.
 **Mode:** mvp
 **Requirements:** INTD-07, CONS-02, VER-05
+**Plans:** 3 plans
+Plans:
+- [ ] 09-01-PLAN.md — Real separate-process Agent B + strict JSONL protocol + happy-path spec-phase ask/answer slice.
+- [ ] 09-02-PLAN.md — Dedicated fail-closed config/provider isolation + bounded retry/timeout escalate-and-block failure policy.
+- [ ] 09-03-PLAN.md — Both surfaces end-to-end on one phase-scoped process + scope lock + Agent A authority + delegation evidence.
+
 **Success Criteria:**
 
 1. Agent B runs in an isolated process with separate runtime config, provider credentials, and logs.
