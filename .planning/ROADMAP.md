@@ -129,8 +129,16 @@ Plans:
 **Requirements:** INTD-07, CONS-02, VER-05
 **Plans:** 3 plans
 Plans:
+**Wave 1**
+
 - [ ] 09-01-PLAN.md — Real separate-process Agent B + strict JSONL protocol + happy-path spec-phase ask/answer slice.
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 09-02-PLAN.md — Dedicated fail-closed config/provider isolation + bounded retry/timeout escalate-and-block failure policy.
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 09-03-PLAN.md — Both surfaces end-to-end on one phase-scoped process + scope lock + Agent A authority + delegation evidence.
 
 **Success Criteria:**
