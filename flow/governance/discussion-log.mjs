@@ -1,6 +1,33 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+const PROVIDER_METADATA_ALLOWLIST = new Set([
+  "providerName",
+  "providerLatencyMs",
+  "providerStatusCode",
+  "providerRequestId",
+]);
+
+export function sanitizeProviderMetadata(input) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return {};
+  }
+
+  const sanitized = {};
+  for (const [key, value] of Object.entries(input)) {
+    if (!PROVIDER_METADATA_ALLOWLIST.has(key)) continue;
+    sanitized[key] = value;
+  }
+  return sanitized;
+}
+
+function sanitizeDiscussionRecord(record) {
+  return {
+    ...record,
+    providerMetadata: sanitizeProviderMetadata(record.providerMetadata),
+  };
+}
+
 async function resolvePhaseDirectory(projectRoot, phaseNumber) {
   const phasesDir = path.join(projectRoot, ".planning", "phases");
   const padded = String(phaseNumber).padStart(2, "0");
@@ -13,13 +40,15 @@ function renderEntry({ runId, phaseNumber, records }) {
   const lines = [
     `### Run ${runId} - Phase ${String(phaseNumber).padStart(2, "0")}`,
     "",
-    "| Timestamp | Question Id | Agent | Question | Answer | Confidence | Escalation |",
-    "|-----------|-------------|-------|----------|--------|------------|------------|",
+    "| Timestamp | Question Id | Agent | Question | Answer | Confidence | Escalation | Provider Metadata |",
+    "|-----------|-------------|-------|----------|--------|------------|------------|-------------------|",
   ];
 
-  for (const record of records) {
+  for (const rawRecord of records) {
+    const record = sanitizeDiscussionRecord(rawRecord);
+    const providerMetadata = JSON.stringify(record.providerMetadata ?? {});
     lines.push(
-      `| ${record.createdAt ?? ""} | ${record.questionId ?? ""} | ${record.agentId ?? ""} | ${String(record.question ?? "").replace(/\|/g, "\\|")} | ${String(record.answer ?? "").replace(/\|/g, "\\|")} | ${record.confidence ?? ""} | ${record.escalationDisposition ?? ""} |`,
+      `| ${record.createdAt ?? ""} | ${record.questionId ?? ""} | ${record.agentId ?? ""} | ${String(record.question ?? "").replace(/\|/g, "\\|")} | ${String(record.answer ?? "").replace(/\|/g, "\\|")} | ${record.confidence ?? ""} | ${record.escalationDisposition ?? ""} | ${providerMetadata.replace(/\|/g, "\\|")} |`,
     );
   }
 

@@ -71,6 +71,8 @@ export async function buildResponderContextPack({ projectRoot, selectedPhases, d
 
   return {
     schemaVersion: 1,
+    contractScope: "phase8-spec-discuss-only",
+    contractSchemaVersion: "1.0.0",
     projectRoot,
     artifactPaths: artifacts.map((artifact) => artifact.path),
     artifacts,
@@ -80,6 +82,7 @@ export async function buildResponderContextPack({ projectRoot, selectedPhases, d
       phaseName: phase.name,
       goal: phase.goal,
       requirements: phase.requirements,
+      contractScope: "phase8-spec-discuss-only",
       descriptor: descriptors.find((descriptor) => descriptor.phaseNumber === phase.phaseNumber) ?? null,
     })),
   };

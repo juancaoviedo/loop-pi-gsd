@@ -13,6 +13,7 @@ import { loadRoadmapAndState, selectTargetPhases } from "./orchestrator/select-p
 import { buildOrchestratorRunId, buildIsolationDescriptors } from "./orchestrator/isolation.mjs";
 import { buildInterceptionMetadata } from "./orchestrator/interception.mjs";
 import { buildResponderContextPack } from "./orchestrator/context-pack.mjs";
+import { runDebatePrototype } from "./orchestrator/debate-prototype.mjs";
 import { persistOrchestratorManifest } from "./orchestrator/run-manifest.mjs";
 import { runLifecycleForSelectedPhases } from "./lifecycle/engine.mjs";
 import { persistLifecycleResult } from "./lifecycle/persist-lifecycle.mjs";
@@ -25,7 +26,7 @@ import { buildReconciliationReport, persistReconciliationReport } from "./govern
 import { appendDiscussionLog } from "./governance/discussion-log.mjs";
 
 function printUsage() {
-  console.error("Usage: node flow/cli.mjs <flow-create-additional-phases|flow-execute-all-phases> [source-file] [--min-phases N --max-phases N --target-complexity N]");
+  console.error("Usage: node flow/cli.mjs <flow-create-additional-phases|flow-execute-all-phases> [source-file] [--min-phases N --max-phases N --target-complexity N] [--phase8-debate-prototype --phase8-workflow spec-phase|discuss-phase --phase8-transcript-json '<json>']");
 }
 
 function parseSizingArgs(argv) {
@@ -55,6 +56,9 @@ function parseExecutionArgs(argv) {
     runGovernance: false,
     riskThreshold: null,
     confidenceThreshold: null,
+    phase8DebatePrototype: false,
+    phase8Workflow: null,
+    phase8TranscriptJson: null,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -92,6 +96,14 @@ function parseExecutionArgs(argv) {
       if (!Number.isNaN(confidenceThreshold)) {
         result.confidenceThreshold = confidenceThreshold;
       }
+      i += 1;
+    } else if (token === "--phase8-debate-prototype") {
+      result.phase8DebatePrototype = true;
+    } else if (token === "--phase8-workflow") {
+      result.phase8Workflow = argv[i + 1] ?? null;
+      i += 1;
+    } else if (token === "--phase8-transcript-json") {
+      result.phase8TranscriptJson = argv[i + 1] ?? null;
       i += 1;
     }
   }
@@ -142,9 +154,37 @@ async function runBootstrapWorkflow({ sourcePath, sizingArgs }) {
   };
 }
 
+function parsePhase8Transcript(rawJson) {
+  if (!rawJson) return [];
+  const parsed = JSON.parse(rawJson);
+  if (!Array.isArray(parsed)) {
+    throw new Error("--phase8-transcript-json must decode to an array of debate events.");
+  }
+  return parsed;
+}
+
 async function runExecutionOrchestrator({ argv }) {
-  const projectRoot = process.cwd();
   const options = parseExecutionArgs(argv);
+
+  if (options.phase8DebatePrototype) {
+    const transcript = parsePhase8Transcript(options.phase8TranscriptJson);
+    const result = runDebatePrototype({
+      workflow: options.phase8Workflow,
+      transcript,
+      policyConfig: {
+        confidenceThreshold: options.confidenceThreshold === null ? undefined : options.confidenceThreshold,
+        maxInvalidAnswerRetries: options.maxRetries === null ? undefined : options.maxRetries,
+      },
+    });
+
+    return {
+      workflow: "phase8-debate-prototype",
+      scope: "spec-discuss-only",
+      result,
+    };
+  }
+
+  const projectRoot = process.cwd();
   const { phases, completedPhases, currentPhase, stateText } = await loadRoadmapAndState({
     roadmapPath: path.join(projectRoot, ".planning", "ROADMAP.md"),
     statePath: path.join(projectRoot, ".planning", "STATE.md"),
