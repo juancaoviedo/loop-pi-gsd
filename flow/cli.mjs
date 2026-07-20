@@ -12,8 +12,10 @@ import { persistTraceMap } from "./bootstrap/trace-map.mjs";
 import { loadRoadmapAndState, selectTargetPhases } from "./orchestrator/select-phases.mjs";
 import { buildOrchestratorRunId, buildIsolationDescriptors } from "./orchestrator/isolation.mjs";
 import { buildInterceptionMetadata } from "./orchestrator/interception.mjs";
+import { buildAgentBInterceptionRuntime } from "./orchestrator/interception.mjs";
 import { buildResponderContextPack } from "./orchestrator/context-pack.mjs";
 import { runDebatePrototype } from "./orchestrator/debate-prototype.mjs";
+import { closeAgentBSession, openAgentBSession, runDelegatedRound } from "./orchestrator/agent-b-session.mjs";
 import { persistOrchestratorManifest } from "./orchestrator/run-manifest.mjs";
 import { runLifecycleForSelectedPhases } from "./lifecycle/engine.mjs";
 import { persistLifecycleResult } from "./lifecycle/persist-lifecycle.mjs";
@@ -26,7 +28,7 @@ import { buildReconciliationReport, persistReconciliationReport } from "./govern
 import { appendDiscussionLog } from "./governance/discussion-log.mjs";
 
 function printUsage() {
-  console.error("Usage: node flow/cli.mjs <flow-create-additional-phases|flow-execute-all-phases> [source-file] [--min-phases N --max-phases N --target-complexity N] [--phase8-debate-prototype --phase8-workflow spec-phase|discuss-phase --phase8-transcript-json '<json>']");
+  console.error("Usage: node flow/cli.mjs <flow-create-additional-phases|flow-execute-all-phases> [source-file] [--min-phases N --max-phases N --target-complexity N] [--phase8-debate-prototype --phase8-workflow spec-phase|discuss-phase --phase8-transcript-json '<json>'] [--phase9-agent-b --phase9-workflow spec-phase|discuss-phase --phase9-config <path>]");
 }
 
 function parseSizingArgs(argv) {
@@ -59,6 +61,12 @@ function parseExecutionArgs(argv) {
     phase8DebatePrototype: false,
     phase8Workflow: null,
     phase8TranscriptJson: null,
+    phase9AgentB: false,
+    phase9Workflow: null,
+    phase9Config: null,
+    phase9Question: null,
+    phase9Mode: null,
+    phase9Transport: null,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -104,6 +112,23 @@ function parseExecutionArgs(argv) {
       i += 1;
     } else if (token === "--phase8-transcript-json") {
       result.phase8TranscriptJson = argv[i + 1] ?? null;
+      i += 1;
+    } else if (token === "--phase9-agent-b") {
+      result.phase9AgentB = true;
+    } else if (token === "--phase9-workflow") {
+      result.phase9Workflow = argv[i + 1] ?? null;
+      i += 1;
+    } else if (token === "--phase9-config") {
+      result.phase9Config = argv[i + 1] ?? null;
+      i += 1;
+    } else if (token === "--phase9-question") {
+      result.phase9Question = argv[i + 1] ?? null;
+      i += 1;
+    } else if (token === "--phase9-mode") {
+      result.phase9Mode = argv[i + 1] ?? null;
+      i += 1;
+    } else if (token === "--phase9-transport") {
+      result.phase9Transport = argv[i + 1] ?? null;
       i += 1;
     }
   }
@@ -165,6 +190,50 @@ function parsePhase8Transcript(rawJson) {
 
 async function runExecutionOrchestrator({ argv }) {
   const options = parseExecutionArgs(argv);
+
+  if (options.phase9AgentB) {
+    if (!options.phase9Workflow) {
+      throw new Error("--phase9-workflow is required when --phase9-agent-b is enabled.");
+    }
+    if (!options.phase9Config) {
+      throw new Error("--phase9-config is required when --phase9-agent-b is enabled.");
+    }
+
+    const projectRoot = process.cwd();
+    const runId = `orchestrator-${crypto.randomBytes(6).toString("hex")}`;
+    const session = await openAgentBSession({
+      projectRoot,
+      runId,
+      phaseNumber: 9,
+      config: { configPath: options.phase9Config },
+    });
+
+    try {
+      const round = await runDelegatedRound(session, {
+        workflow: options.phase9Workflow,
+        question: options.phase9Question ?? `Delegated question for ${options.phase9Workflow}`,
+        mode: options.phase9Mode,
+        transport: options.phase9Transport,
+      });
+
+      const delegationRecords = normalizeDelegationRecords([{ ...round, phaseNumber: 9 }]);
+
+      return {
+        workflow: "phase9-agent-b",
+        scope: "spec-discuss-ask-answer-only",
+        runId,
+        pid: session.pid,
+        interception: buildAgentBInterceptionRuntime({
+          workflow: options.phase9Workflow,
+          transport: options.phase9Transport ?? "stdio-jsonl",
+        }),
+        result: round,
+        delegationRecords,
+      };
+    } finally {
+      await closeAgentBSession(session);
+    }
+  }
 
   if (options.phase8DebatePrototype) {
     const transcript = parsePhase8Transcript(options.phase8TranscriptJson);

@@ -15,6 +15,16 @@ const DEFAULT_INTERCEPT_RULES = Object.freeze([
   },
 ]);
 
+export function buildAgentBInterceptionRuntime({ workflow, transport = "stdio-jsonl", scope = "spec-discuss-ask-answer-only" }) {
+  return {
+    workflow,
+    transport,
+    scope,
+    roleBoundary: "agent-a-controls-policy_agent-b-answer-only",
+    phase9Runtime: true,
+  };
+}
+
 export function buildInterceptionMetadata({ selectedPhases }) {
   return {
     schemaVersion: 1,
